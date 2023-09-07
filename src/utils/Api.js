@@ -67,31 +67,13 @@ class Api {
             .then(res => this._getResponseData(res))
     }
 
-    // Добавляет лайк
-    addLike(card_id) {
-        return fetch(`${this._baseUrl}/cards/${card_id}/likes `, {
-            method: 'PUT',
-            headers: this._headers
-        },)
+    // Добавляет/удаляет лайк
+    changeLikeCardStatus(cardId, isLiked) {
+        return fetch(`${this._baseUrl}/cards/${cardId}/likes`, {
+            method: `${!isLiked ? 'DELETE' : 'PUT'}`,
+            headers: this._headers,
+        })
             .then(res => this._getResponseData(res))
-    }
-
-    // Удаляет лайк
-    deleteLike(card_id) {
-        return fetch(`${this._baseUrl}/cards/${card_id}/likes `, {
-            method: 'DELETE',
-            headers: this._headers
-        },)
-            .then(res => {
-                if (!res.ok) {
-                    // если ошибка, отклоняет промис
-                    return Promise.reject(`Ошибка: ${res.status}`);
-                }
-                return res.json();
-            })
-            .then(data => {
-                return data;
-            });
     }
 
     // Обновляет аватар пользователя

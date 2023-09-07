@@ -1,4 +1,4 @@
-export default function PopupWithForm({name, title, buttonText, isOpen, onClose, children}) {
+export default function PopupWithForm({ name, title, buttonText, isOpen, onClose, children }) {
     return (
         <div className={`popup popup_type_${name} ${isOpen && 'popup_opened'}`} >
             <div className="popup__container">
