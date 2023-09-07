@@ -1,0 +1,15 @@
+.footer__copyright {
+    margin: 0;
+}
+
+@media screen and (max-width: 1023px) {
+    .footer__copyright {
+        padding-left: 40px;
+    }
+}
+
+@media screen and (max-width: 767px) {
+    .footer__copyright {
+        padding-left: 19px;
+    }
+}

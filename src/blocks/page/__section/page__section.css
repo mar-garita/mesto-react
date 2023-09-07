@@ -1,0 +1,6 @@
+.page__section {
+    width: 100%;
+    max-width: 880px;
+    min-width: 320px;
+    margin: 0 auto;
+}

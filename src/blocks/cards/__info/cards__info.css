@@ -1,0 +1,9 @@
+.cards__info {
+    min-height: 79px;
+    display: flex;
+    justify-content: space-between;
+    /*align-items: baseline;*/
+    padding: 22px 21px;
+    box-sizing: border-box;
+    color: #000000;
+}

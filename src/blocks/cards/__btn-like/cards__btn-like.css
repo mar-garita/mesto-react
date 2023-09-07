@@ -1,0 +1,14 @@
+.cards__btn-like {
+    width: 22px;
+    height: 19px;
+    background-image: url("../../../images/btn-like_disabled.svg");
+    background-repeat: no-repeat;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    transition: opacity 0.7s ease;
+}
+
+.cards__btn-like:hover {
+    opacity: 0.5;
+}

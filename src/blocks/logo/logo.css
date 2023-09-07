@@ -1,0 +1,23 @@
+.logo {
+    display: block;
+    width: 142px;
+    height: 33px;
+}
+
+/*768px - 1023px*/
+
+@media screen and (max-width: 1023px) {
+    .logo {
+        padding-left: 40px;
+    }
+}
+
+/* - 767px*/
+
+@media screen and (max-width: 767px) {
+    .logo {
+        width: 103px;
+        height: 24px;
+        padding-left: 27px;
+    }
+}

@@ -1,0 +1,6 @@
+.profile__container {
+    display: grid;
+    grid-template-columns: repeat(2, min-content);
+    gap: 18px;
+    align-items: baseline;
+}

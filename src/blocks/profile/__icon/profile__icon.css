@@ -1,0 +1,5 @@
+.profile__icon {
+    width: 22px;
+    height: 22px;
+    background: url("../../../images/edit_avatar.svg") no-repeat center;
+}

@@ -1,0 +1,10 @@
+.page {
+    min-height: 100vh;
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: min-content;
+    background-color: #000000;
+    color: #FFFFFF;
+    font-family: 'Inter', 'Arial', serif;
+    text-rendering: optimizeLegibility;
+}
