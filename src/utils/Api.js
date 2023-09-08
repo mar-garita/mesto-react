@@ -78,7 +78,7 @@ class Api {
 
     // Обновляет аватар пользователя
     updateAvatar(value) {
-        return fetch(`${this._baseUrl}/users/me/avatar `, {
+        return fetch(`${this._baseUrl}/users/me/avatar`, {
             method: 'PATCH',
             headers: this._headers,
             body: JSON.stringify({
