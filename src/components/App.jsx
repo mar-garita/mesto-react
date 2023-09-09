@@ -37,14 +37,6 @@ export default function App() {
             .catch(err => console.log(err));
     }, [])
 
-    // Пропс, который закрывает все попапы
-    function closeAllPopups() {
-        setIsEditProfilePopupOpen(false);
-        setIsEditAvatarPopupOpen(false);
-        setIsAddPlacePopupOpen(false);
-        setSelectedCard(null);
-    }
-
     // Хук useEffect вызывает колбэк (получающий с сервера данные пользователя)
     // после того, как компонент App будет смонтирован
     React.useEffect(() => {
@@ -55,6 +47,14 @@ export default function App() {
             })
             .catch(err => console.log(err));
     }, [])
+
+    // Пропс, который закрывает все попапы
+    function closeAllPopups() {
+        setIsEditProfilePopupOpen(false);
+        setIsEditAvatarPopupOpen(false);
+        setIsAddPlacePopupOpen(false);
+        setSelectedCard(null);
+    }
 
 
     //------------------ Обработчики событий, открывающие попапы ---------------------//
@@ -88,8 +88,18 @@ export default function App() {
         // Отправка запроса в API и получение обновлённых данных карточки
         api.changeLikeCardStatus(card._id, !isLiked)
             .then(newCard => {
-                console.log(cards)
-                setCards(state => state.map((c) => c._id === card._id ? newCard : c));
+                setCards(cards => cards.map(element => element._id === card._id ? newCard : element));
+            })
+            .catch(err => console.error(err));
+    }
+
+    // Удаление карточки
+    function handleDeleteCard(card) {
+        // Отправка запроса в API и получение обновлённых данных карточки
+        api.deleteCard(card._id)
+            .then(() => {
+                // Перезаписываем массив cards, в который добавляются все карточки кроме удаленной
+                setCards(cards.filter(element => element._id !== card._id));
             })
             .catch(err => console.error(err));
     }
@@ -129,6 +139,7 @@ export default function App() {
                         onAddPlace={handleAddPlaceClick}
                         onCardClick={handleCardClick}
                         onCardLike={handleCardLike}
+                        onCardDelete={handleDeleteCard}
                         cards={cards}
                     />
                     <Footer />

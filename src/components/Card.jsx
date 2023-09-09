@@ -1,7 +1,7 @@
 import React from "react";
 import { CurrentUserContext } from "../contexts/CurrentUserContext";
 
-export default function Card({ card, onCardClick, onCardLike }) {
+export default function Card({ card, onCardClick, onCardLike, onCardDelete }) {
     // Подписываемся на контекст CurrentUserContext
     const currentUser = React.useContext(CurrentUserContext);
 
@@ -22,17 +22,17 @@ export default function Card({ card, onCardClick, onCardLike }) {
     }
 
     const handleCardLike = () => {
-        onCardLike(card)
+        onCardLike(card);
     }
 
-    const handleDeleteClick = () => {
-
+    const handleCardDelete = () => {
+        onCardDelete(card);
     }
 
     return (
         <li id="cards-item" className="cards__item">
             {/*Если пользователь создатель карточки, то на ней отображается кнопка удаления*/}
-            {isOwner && <button type="button" aria-label="Удалить карточку" className="button cards__btn-delete" onClick={handleDeleteClick} />}
+            {isOwner && <button type="button" aria-label="Удалить карточку" className="button cards__btn-delete" onClick={handleCardDelete} />}
             <img src={card.link} alt={card.name} id="cards-image" className="cards__image" onClick={handleCardClick}/>
             <div className="cards__info">
                 <h2 id="cards-title" className="cards__title">{card.name}</h2>
