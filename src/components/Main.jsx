@@ -34,7 +34,14 @@ export default function Main ({ onEditProfile, onEditAvatar, onAddPlace, onCardC
             <section className="cards">
                 <ul id="cards-list" className="cards__list">
                     {cards.map(card => (
-                        <Card key={card._id} card={card} onCardClick={onCardClick} onCardLike={onCardLike} onCardDelete={onCardDelete} />
+                        <Card
+                            key={card._id}
+                            card={card}
+                            onCardClick={onCardClick}
+                            onCardLike={onCardLike}
+                            onCardDelete={onCardDelete}
+                        />
+                        // <Card key={card._id} card={card} onCardClick={onCardClick} onCardLike={onCardLike} onCardDelete={onCardDelete} />
                     ))}
                 </ul>
             </section>

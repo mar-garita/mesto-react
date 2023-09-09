@@ -5,30 +5,40 @@ import Header from "./Header";
 import Footer from "./Footer";
 import ImagePopup from "./ImagePopup";
 import AddPlacePopup from "./AddPlacePopup";
-import PopupWithForm from "./PopupWithForm";
 import EditAvatarPopup from "./EditAvatarPopup";
 import EditProfilePopup from "./EditProfilePopup";
+import ConfirmationPopup from "./ConfirmationPopup";
 
 import { api } from "../utils/Api";
 import { CurrentUserContext } from "../contexts/CurrentUserContext";
 
 
 export default function App() {
-    // Переменные состояния, отвечающие за видимость попапов с формой
+    // ----------------------------- Переменные состояния ---------------------------- //
+
+    // Отвечают за видимость попапов с формой
     const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = React.useState(false);
     const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = React.useState(false);
     const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = React.useState(false);
+    const [isConfirmationPopupOpen, setIsConfirmationPopupOpen] = React.useState(false);
 
-    // Переменная состояния, отвечает за видимость попапа с картинкой
+    // Отвечает за видимость попапа с картинкой
     const [selectedCard, setSelectedCard] = React.useState(null);
 
-    // Переменная состояния, отвечающая за информацию о пользователе
+    // Индикатор загрузки запросов для кнопки сабмита в попапах
+    const [isLoading, setIsLoading] = React.useState(false);
+
+    // Отвечает за информацию о пользователе
     const [currentUser, setCurrentUser] = React.useState('');
 
-    // Переменная состояния, отвечающая за карточки
+    // Отвечает за список карточек
     const [cards, setCards] = React.useState([]);
+    // Отвечает за карточку, выбранную для удаления
+    const [cardToDelete, setCardToDelete] = React.useState({});
 
-    // Хук useEffect вызывает колбэк (получающий с сервера данные о всех карточках)
+    // --------------------------------- Хуки ------------------------------------- //
+
+    // useEffect вызывает колбэк (получающий с сервера данные о всех карточках)
     // после того, как компонент Main будет смонтирован
     React.useEffect(() => {
         api.getInitialCards()
@@ -38,7 +48,7 @@ export default function App() {
             .catch(err => console.log(err));
     }, [])
 
-    // Хук useEffect вызывает колбэк (получающий с сервера данные пользователя)
+    // useEffect вызывает колбэк (получающий с сервера данные пользователя)
     // после того, как компонент App будет смонтирован
     React.useEffect(() => {
         api.getUserInfo()
@@ -49,18 +59,9 @@ export default function App() {
             .catch(err => console.log(err));
     }, [])
 
-    // Пропс, который закрывает все попапы
-    function closeAllPopups() {
-        setIsEditProfilePopupOpen(false);
-        setIsEditAvatarPopupOpen(false);
-        setIsAddPlacePopupOpen(false);
-        setSelectedCard(null);
-    }
+    //-------------------------------- Обработчики событий ---------------------------------- //
 
-
-    //------------------ Обработчики событий, открывающие попапы ---------------------//
-
-    // Попапы с формой
+    // Открывают попапы с формой
     function handleEditProfileClick() {
         setIsEditProfilePopupOpen(true);
     }
@@ -73,20 +74,33 @@ export default function App() {
         setIsAddPlacePopupOpen(true);
     }
 
-    // Попап с картинкой
+    // Открывает попап с картинкой
     function handleCardClick(card) {
         setSelectedCard(card);
     }
 
-    //------------------------------- Обработчик событий -----------------------------------//
+    // Закрывает все попапы
+    function closeAllPopups() {
+        setIsConfirmationPopupOpen(false);
+        setIsEditProfilePopupOpen(false);
+        setIsEditAvatarPopupOpen(false);
+        setIsAddPlacePopupOpen(false);
+        setSelectedCard(null);
+    }
 
-    // Добавление новой карточки
+    // Добавляет новую карточку
     function handleAddPlaceSubmit(newCard) {
+        // включает индикатор загрузки
+        setIsLoading(true)
         api.createCard(newCard)
             .then(newCardData => {
                 setCards([newCardData, ...cards]);
             })
-            .catch(err => console.error(err));
+            .catch(err => console.error(err))
+            .finally(() => {
+                // выключает индикатор загрузки
+                setIsLoading(false);
+            })
     }
 
     // Лайк/дизлайк
@@ -102,35 +116,49 @@ export default function App() {
             .catch(err => console.error(err));
     }
 
-    // Удаление карточки
+    // Открывает попап подтверждения при клике на иконку удаления карточки
+    function handleDeleteCardClick(card) {
+        setIsConfirmationPopupOpen(true);
+        setCardToDelete(card);
+    }
+
+    // Удаляет карточку при нажатии на кнопку "Да" в попапе подтверждения
     function handleDeleteCard(card) {
-        // Отправка запроса в API и получение обновлённых данных карточки
         api.deleteCard(card._id)
             .then(() => {
-                // Перезаписываем массив cards, в который добавляются все карточки кроме удаленной
+                // Перезаписывает массив cards, в который добавляются все карточки кроме удаленной
                 setCards(cards.filter(element => element._id !== card._id));
             })
             .catch(err => console.error(err));
     }
 
-    // Обновление профиля пользователя
+    // Обновляет профиль пользователя
     function handleUpdateUser(newUserData) {
+        setIsLoading(true)
         // newUserData – объект вида {name: 'userName', about: 'userDescription'}
         api.updateProfile(newUserData)
             .then(data => {
                 setCurrentUser(data)
             })
-            .catch(err => console.error(err));
+            .catch(err => console.error(err))
+            .finally(() => {
+                setIsLoading(false);
+            })
     }
 
-    // Обновление аватара пользователя
+    // Обновляет аватар пользователя
     function handleUpdateAvatar(newAvatar) {
-        // newUserData – объект вида {avatar: 'https://pictures.com'}
+        setIsLoading(true)
+
+        // newAvatar – объект вида {avatar: 'https://pictures.com'}
         api.updateAvatar(newAvatar)
             .then(data => {
                 setCurrentUser(data)
             })
-            .catch(err => console.error(err));
+            .catch(err => console.error(err))
+            .finally(() => {
+                setIsLoading(false);
+            })
     }
 
 
@@ -148,7 +176,7 @@ export default function App() {
                         onAddPlace={handleAddPlaceClick}
                         onCardClick={handleCardClick}
                         onCardLike={handleCardLike}
-                        onCardDelete={handleDeleteCard}
+                        onCardDelete={handleDeleteCardClick}
                         cards={cards}
                     />
                     <Footer />
@@ -156,25 +184,28 @@ export default function App() {
 
                 <EditProfilePopup
                     isOpen={isEditProfilePopupOpen}
+                    isLoading={isLoading}
                     onClose={closeAllPopups}
-                    onUpdateUser={handleUpdateUser} />
+                    onUpdateUser={handleUpdateUser}
+                />
                 <EditAvatarPopup
                     isOpen={isEditAvatarPopupOpen}
+                    isLoading={isLoading}
                     onClose={closeAllPopups}
-                    onUpdateAvatar={handleUpdateAvatar} />
+                    onUpdateAvatar={handleUpdateAvatar}
+                />
                 <AddPlacePopup
                     isOpen={isAddPlacePopupOpen}
+                    isLoading={isLoading}
                     onClose={closeAllPopups}
-                    onAddPlace={handleAddPlaceSubmit} />
-
-
-                <PopupWithForm
-                    name="confirm-delete-card"
-                    title="Вы уверены?"
+                    onAddPlace={handleAddPlaceSubmit}
+                />
+                <ConfirmationPopup
+                    isOpen={isConfirmationPopupOpen}
                     onClose={closeAllPopups}
-                >
-                </PopupWithForm>
-
+                    card={cardToDelete}
+                    onCardDelete={handleDeleteCard}
+                />
                 <ImagePopup
                     card={selectedCard}
                     onClose={closeAllPopups}
