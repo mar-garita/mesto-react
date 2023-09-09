@@ -4,6 +4,7 @@ import Main from "./Main";
 import Header from "./Header";
 import Footer from "./Footer";
 import ImagePopup from "./ImagePopup";
+import AddPlacePopup from "./AddPlacePopup";
 import PopupWithForm from "./PopupWithForm";
 import EditAvatarPopup from "./EditAvatarPopup";
 import EditProfilePopup from "./EditProfilePopup";
@@ -79,6 +80,14 @@ export default function App() {
 
     //------------------------------- Обработчик событий -----------------------------------//
 
+    // Добавление новой карточки
+    function handleAddPlaceSubmit(newCard) {
+        api.createCard(newCard)
+            .then(newCardData => {
+                setCards([newCardData, ...cards]);
+            })
+            .catch(err => console.error(err));
+    }
 
     // Лайк/дизлайк
     function handleCardLike(card) {
@@ -145,22 +154,19 @@ export default function App() {
                     <Footer />
                 </div>
 
-                <EditProfilePopup isOpen={isEditProfilePopupOpen} onClose={closeAllPopups} onUpdateUser={handleUpdateUser} />
-                <EditAvatarPopup isOpen={isEditAvatarPopupOpen} onClose={closeAllPopups} onUpdateAvatar={handleUpdateAvatar} />
-
-
-                <PopupWithForm
-                    name="add-card"
-                    title="Новое место"
-                    buttonText="Создать"
+                <EditProfilePopup
+                    isOpen={isEditProfilePopupOpen}
+                    onClose={closeAllPopups}
+                    onUpdateUser={handleUpdateUser} />
+                <EditAvatarPopup
+                    isOpen={isEditAvatarPopupOpen}
+                    onClose={closeAllPopups}
+                    onUpdateAvatar={handleUpdateAvatar} />
+                <AddPlacePopup
                     isOpen={isAddPlacePopupOpen}
                     onClose={closeAllPopups}
-                >
-                    <input type="text" name="title" id="input-title" className="popup__input" placeholder="Название" required minLength="2" maxLength="30"/>
-                    <span className="popup__error popup__input-title-error"/>
-                    <input type="url" name="link" id="input-link" className="popup__input" placeholder="Ссылка на картинку" required/>
-                    <span className="popup__error popup__input-link-error"/>
-                </PopupWithForm>
+                    onAddPlace={handleAddPlaceSubmit} />
+
 
                 <PopupWithForm
                     name="confirm-delete-card"

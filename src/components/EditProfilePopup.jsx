@@ -17,19 +17,19 @@ export default function EditProfilePopup({ isOpen, onClose, onUpdateUser }) {
         setDescription(currentUser.about);
     }, [currentUser]);
 
-    // Обработчик изменения поля ввода имени обновляет стейт name
-    function handleChangeName(e) {
-        setName(e.target.value);
+    // Обработчик изменения инпута обновляет стейт name
+    function handleChangeName(evt) {
+        setName(evt.target.value);
     }
 
     // Обработчик изменения инпута обновляет стейт description
-    function handleChangeDescription(e) {
-        setDescription(e.target.value);
+    function handleChangeDescription(evt) {
+        setDescription(evt.target.value);
     }
 
-    function handleSubmit(e) {
+    function handleSubmit(evt) {
         // Запрещает браузеру переходить по адресу формы
-        e.preventDefault();
+        evt.preventDefault();
 
         // Передаёт значения управляемых компонентов инпут
         // во внешний обработчик (функция handleUpdateUser в App.jsx)

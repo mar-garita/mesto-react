@@ -4,8 +4,8 @@ import PopupWithForm from "./PopupWithForm";
 export default function EditAvatarPopup({ isOpen, onClose, onUpdateAvatar }) {
     const avatarRef = React.useRef('');
 
-    function handleSubmit(e) {
-        e.preventDefault();
+    function handleSubmit(evt) {
+        evt.preventDefault();
 
         // Передаёт значения управляемого компонента инпут
         // во внешний обработчик (функция handleUpdateAvatar в App.jsx)

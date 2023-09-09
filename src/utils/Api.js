@@ -1,4 +1,4 @@
-import {config} from "./config.js";
+import { config } from "./config.js";
 
 class Api {
     constructor(config) {
@@ -45,20 +45,32 @@ class Api {
             .then(res => this._getResponseData(res))
     }
 
-    // Обновляет информацию о пользователе
+    // Обновляет аватар пользователя
+    updateAvatar(value) {
+        return fetch(`${this._baseUrl}/users/me/avatar`, {
+            method: 'PATCH',
+            headers: this._headers,
+            body: JSON.stringify({
+                avatar: value.link,
+            })
+        },)
+            .then(res => this._getResponseData(res))
+    }
+
+    // Создает новую карточку
     createCard(value) {
         return fetch(`${this._baseUrl}/cards`, {
             method: 'POST',
             headers: this._headers,
             body: JSON.stringify({
-                name: value.title,
+                name: value.name,
                 link: value.link
             })
         },)
             .then(res => this._getResponseData(res))
     }
 
-    // Обновляет информацию о пользователе
+    // Удаляет карточку
     deleteCard(card_id) {
         return fetch(`${this._baseUrl}/cards/${card_id}`, {
             method: 'DELETE',
@@ -73,18 +85,6 @@ class Api {
             method: `${!isLiked ? 'DELETE' : 'PUT'}`,
             headers: this._headers,
         })
-            .then(res => this._getResponseData(res))
-    }
-
-    // Обновляет аватар пользователя
-    updateAvatar(value) {
-        return fetch(`${this._baseUrl}/users/me/avatar`, {
-            method: 'PATCH',
-            headers: this._headers,
-            body: JSON.stringify({
-                avatar: value.link,
-            })
-        },)
             .then(res => this._getResponseData(res))
     }
 }
