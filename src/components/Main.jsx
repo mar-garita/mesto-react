@@ -1,8 +1,6 @@
 import React from "react";
 
-import editAvatarButton from '../images/edit_button.svg';
 import Card from "./Card";
-
 import { CurrentUserContext } from '../contexts/CurrentUserContext';
 
 
@@ -16,7 +14,7 @@ export default function Main ({ onEditProfile, onEditAvatar, onAddPlace, onCardC
                 <div className="profile__wrap">
                     <img src={currentUser.avatar} alt="Аватар" className="profile__avatar"/>
                     <div onClick={onEditAvatar} className="profile__overlay">
-                        <div id="profile-avatar-icon" className="profile__icon" src={editAvatarButton}/>
+                        <div id="profile-avatar-icon" className="profile__icon"/>
                     </div>
                 </div>
                 <div className="profile__info">
@@ -32,8 +30,7 @@ export default function Main ({ onEditProfile, onEditAvatar, onAddPlace, onCardC
             </section>
 
             <section className="cards">
-                <ul id="cards-list" className="cards__list">
-                    {cards.map(card => (
+                {cards.map(card => (
                         <Card
                             key={card._id}
                             card={card}
@@ -41,9 +38,7 @@ export default function Main ({ onEditProfile, onEditAvatar, onAddPlace, onCardC
                             onCardLike={onCardLike}
                             onCardDelete={onCardDelete}
                         />
-                        // <Card key={card._id} card={card} onCardClick={onCardClick} onCardLike={onCardLike} onCardDelete={onCardDelete} />
-                    ))}
-                </ul>
+                ))}
             </section>
         </main>
     )

@@ -26,37 +26,31 @@ export default function App() {
     const [selectedCard, setSelectedCard] = React.useState(null);
 
     // Индикатор загрузки запросов для кнопки сабмита в попапах
-    const [isLoading, setIsLoading] = React.useState(false);
+    const [isLoadingAddPlace, setIsLoadingAddPlace] = React.useState(false);
+    const [isLoadingEditAvatar, setIsLoadingEditAvatar] = React.useState(false);
+    const [isLoadingEditProfile, setIsLoadingEditProfile] = React.useState(false);
 
     // Отвечает за информацию о пользователе
-    const [currentUser, setCurrentUser] = React.useState('');
+    const [currentUser, setCurrentUser] = React.useState({});
 
     // Отвечает за список карточек
     const [cards, setCards] = React.useState([]);
     // Отвечает за карточку, выбранную для удаления
     const [cardToDelete, setCardToDelete] = React.useState({});
 
-    // --------------------------------- Хуки ------------------------------------- //
 
-    // useEffect вызывает колбэк (получающий с сервера данные о всех карточках)
-    // после того, как компонент Main будет смонтирован
-    React.useEffect(() => {
-        api.getInitialCards()
-            .then(data => {
-                setCards(data)
-            })
-            .catch(err => console.log(err));
-    }, [])
-
-    // useEffect вызывает колбэк (получающий с сервера данные пользователя)
+    // useEffect вызывает колбэк (получающий с сервера данные пользователя и данные карточек)
     // после того, как компонент App будет смонтирован
     React.useEffect(() => {
-        api.getUserInfo()
-            .then(data => {
-                setCurrentUser(data);
-                closeAllPopups();
-            })
-            .catch(err => console.log(err));
+        Promise.all([
+            api.getInitialCards(),
+            api.getUserInfo()
+        ])
+        .then(([cards, user]) => {
+            setCards(cards);
+            setCurrentUser(user);
+        })
+        .catch(err => console.log(err));
     }, [])
 
     //-------------------------------- Обработчики событий ---------------------------------- //
@@ -91,22 +85,23 @@ export default function App() {
     // Добавляет новую карточку
     function handleAddPlaceSubmit(newCard) {
         // включает индикатор загрузки
-        setIsLoading(true)
+        setIsLoadingAddPlace(true);
         api.createCard(newCard)
             .then(newCardData => {
                 setCards([newCardData, ...cards]);
+                closeAllPopups();
             })
             .catch(err => console.error(err))
             .finally(() => {
                 // выключает индикатор загрузки
-                setIsLoading(false);
+                setIsLoadingAddPlace(false);
             })
     }
 
     // Лайк/дизлайк
     function handleCardLike(card) {
         // Проверка, есть ли уже лайк на этой карточке
-        const isLiked = card.likes.some(card => card._id === currentUser._id);
+        const isLiked = card.likes.some(user => user._id === currentUser._id);
 
         // Отправка запроса в API и получение обновлённых данных карточки
         api.changeLikeCardStatus(card._id, !isLiked)
@@ -127,37 +122,39 @@ export default function App() {
         api.deleteCard(card._id)
             .then(() => {
                 // Перезаписывает массив cards, в который добавляются все карточки кроме удаленной
-                setCards(cards.filter(element => element._id !== card._id));
+                setCards(cards => cards.filter(element => element._id !== card._id));
+                closeAllPopups();
             })
             .catch(err => console.error(err));
     }
 
     // Обновляет профиль пользователя
     function handleUpdateUser(newUserData) {
-        setIsLoading(true)
+        setIsLoadingEditProfile(true);
         // newUserData – объект вида {name: 'userName', about: 'userDescription'}
         api.updateProfile(newUserData)
             .then(data => {
-                setCurrentUser(data)
+                setCurrentUser(data);
+                closeAllPopups();
             })
             .catch(err => console.error(err))
             .finally(() => {
-                setIsLoading(false);
+                setIsLoadingEditProfile(false);
             })
     }
 
     // Обновляет аватар пользователя
     function handleUpdateAvatar(newAvatar) {
-        setIsLoading(true)
-
+        setIsLoadingEditAvatar(true);
         // newAvatar – объект вида {avatar: 'https://pictures.com'}
         api.updateAvatar(newAvatar)
             .then(data => {
-                setCurrentUser(data)
+                setCurrentUser(data);
+                closeAllPopups();
             })
             .catch(err => console.error(err))
             .finally(() => {
-                setIsLoading(false);
+                setIsLoadingEditAvatar(false);
             })
     }
 
@@ -184,19 +181,19 @@ export default function App() {
 
                 <EditProfilePopup
                     isOpen={isEditProfilePopupOpen}
-                    isLoading={isLoading}
+                    isLoading={isLoadingEditProfile}
                     onClose={closeAllPopups}
                     onUpdateUser={handleUpdateUser}
                 />
                 <EditAvatarPopup
                     isOpen={isEditAvatarPopupOpen}
-                    isLoading={isLoading}
+                    isLoading={isLoadingEditAvatar}
                     onClose={closeAllPopups}
                     onUpdateAvatar={handleUpdateAvatar}
                 />
                 <AddPlacePopup
                     isOpen={isAddPlacePopupOpen}
-                    isLoading={isLoading}
+                    isLoading={isLoadingAddPlace}
                     onClose={closeAllPopups}
                     onAddPlace={handleAddPlaceSubmit}
                 />

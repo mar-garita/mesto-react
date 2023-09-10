@@ -4,6 +4,11 @@ import PopupWithForm from "./PopupWithForm";
 export default function EditAvatarPopup({ isOpen, isLoading, onClose, onUpdateAvatar }) {
     const avatarRef = React.useRef('');
 
+    // Очищает поля ввода при открытии попапа
+    React.useEffect(() => {
+        avatarRef.current.value = '';
+    }, [isOpen]);
+
     function handleSubmit(evt) {
         evt.preventDefault();
 
@@ -12,8 +17,6 @@ export default function EditAvatarPopup({ isOpen, isLoading, onClose, onUpdateAv
         onUpdateAvatar({
             link: avatarRef.current.value,
         });
-
-        avatarRef.current.value = '';
     }
 
     return (

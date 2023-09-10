@@ -1,4 +1,4 @@
-import { config } from "./config.js";
+import { apiConfig } from "./apiConfig.js";
 
 class Api {
     constructor(config) {
@@ -90,4 +90,4 @@ class Api {
 }
 
 
-export const api = new Api(config);
+export const api = new Api(apiConfig);

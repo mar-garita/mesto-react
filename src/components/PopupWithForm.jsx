@@ -5,7 +5,7 @@ export default function PopupWithForm({ name, title, buttonText, isOpen, onClose
                 <form name={`${name}`} onSubmit={onSubmit} className="popup__form" noValidate>
                     <h2 className="popup__title">{title}</h2>
                     {children}
-                    <button type="submit" onClick={onClose} aria-label="Сохранить" id="button-add-card"
+                    <button type="submit" aria-label="Сохранить" id="button-add-card"
                             className="button popup__save-button">{buttonText}
                     </button>
                 </form>

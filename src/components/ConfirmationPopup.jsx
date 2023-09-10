@@ -17,7 +17,6 @@ export default function ConfirmationPopup({ isOpen, onClose, card, onCardDelete 
             isOpen={isOpen}
             onClose={onClose}
             onSubmit={handleSubmit}
-        >
-        </PopupWithForm>
+        />
     )
 }
