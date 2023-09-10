@@ -1,8 +1,49 @@
-# React + Vite
+# Mesto-React
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Данный учебный проект создан в рамках прохождения курса "Веб-разработчик" от Яндекс.Практикум
 
-Currently, two official plugins are available:
+### Описание проекта
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+Место - это интерактивная страница, на которой пользователи могут делиться фотографиями, удалять их и ставить лайки.
+
+***Функционал***
+* Редактирование профиля пользователя
+* Добавление и удаление фотографий
+* Добавление и удаление лайков
+* Открытие фотографии в полном размере
+
+### Установка и запуск проекта
+
+***Клонирование репозитория:***
+```shell
+git clone https://github.com/mar-garita/mesto.git
+```
+
+***Установка зависимостей:***
+
+```shell
+npm install
+```
+
+***Запуск проекта:***
+
+```shell
+npm run dev
+```
+
+### Используемые технологии
+
+* HTML5
+* CSS3:
+    + Flexbox
+    + Grid Layout
+    + Positioning
+    + Adaptive UI
+    + Media Queries
+* JavaScript
+* React
+* GIT
+* Методология БЭМ
+* Файловая структура Nested БЭМ
+* Webpack
+* Rest API
